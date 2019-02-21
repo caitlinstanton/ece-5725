@@ -1,0 +1,7 @@
+# Brandon Quinlan (bmq4) and Caitlin Stanton (cs968)
+# ECE5725, Lab 2, Due 3/7
+#!/bin/bash
+
+# Start video controller and mplayer
+python more_video_control.py &
+SDL_VIDEODRIVER=fbcon SDL_FBDEV=/dev/fb1 mplayer -input file=video_fifo -vo sdl bigbuckbunny320p.mp4
