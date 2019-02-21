@@ -28,7 +28,7 @@ while True:
         print "Button 23 has been pressed"
         time.sleep(.200)
     if not GPIO.input(26):
-        print "Button has been pressed"
+        print "Button 26 has been pressed"
         time.sleep(.200)
     if not GPIO.input(27):
         print "Buttin 27 has been pressed"
