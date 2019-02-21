@@ -1,0 +1,5 @@
+#!/bin/bash
+# Start video controller and mplayer
+
+python video_control.py &
+SDL_VIDEODRIVER=fbcon SDL_FBDEV=/dev/fb1 mplayer -input file=video_fifo -vo sdl bigbuckbunny320p.mp4
