@@ -3,6 +3,8 @@
 
 import RPi.GPIO as GPIO
 import subprocess
+import time
+time_stamp = time.time()
 
 # Set GPIO pins to use BCM and as input with pull up
 # For this lab, we added 2 external buttons, connected to GPIO 13 and 26
@@ -31,9 +33,11 @@ GPIO.add_event_detect(22, GPIO.FALLING, callback=ff10, bouncetime=200)
 GPIO.add_event_detect(23, GPIO.FALLING, callback=rewind10, bouncetime=200)
 GPIO.add_event_detect(26, GPIO.FALLING, callback=ff30, bouncetime=200)
 
-try:
-    GPIO.wait_for_edge(27, GPIO.FALLING)
-    subprocess.check_output("echo quit > video_fifo", shell=True)
-except KeyboardInterrupt:
-    GPIO.cleanup()
+while time.time() - time_stamp < 10:
+    try:
+        GPIO.wait_for_edge(27, GPIO.FALLING)
+        subprocess.check_output("echo quit > video_fifo", shell=True)
+    except KeyboardInterrupt:
+        GPIO.cleanup()
+GPIO.cleanup()
 
