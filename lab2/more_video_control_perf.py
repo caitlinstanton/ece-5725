@@ -18,7 +18,7 @@ GPIO.setup(26,GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(27,GPIO.IN, pull_up_down=GPIO.PUD_UP)
 while time.time() - time_stamp < 10:
     # Check each button, send command to fifo, and wait
-    time.sleep(.200)
+    #time.sleep(.0000200)
     if not GPIO.input(13):
         subprocess.check_output("echo seek -30 0 > video_fifo", shell = True)
         time.sleep(.200)
