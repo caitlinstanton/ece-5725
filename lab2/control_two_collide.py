@@ -39,7 +39,7 @@ screen.fill(BLACK)
 while code_running:
     clock.tick(speed)
     screen.fill(BLACK)
-    if (game_running): #ball collision displayed 
+    if (game_running and not paused): #ball collision displayed 
         ball_rect = ball_rect.move(speed)
         ball2_rect = ball2_rect.move(speed2)
         if ball_rect.left < 0 or ball_rect.right > width:
@@ -85,10 +85,11 @@ while code_running:
                         game_running = False
                         code_running = True
                         paused = False
-    for my_text, text_pos in my_buttons.items(): #start,quit buttons displayed
-        text_surface = my_font.render(my_text,True,WHITE)
-        rect = text_surface.get_rect(center=text_pos)
-        screen.blit(text_surface,rect)
+    else:
+        for my_text, text_pos in my_buttons.items(): #start,quit buttons displayed
+            text_surface = my_font.render(my_text,True,WHITE)
+            rect = text_surface.get_rect(center=text_pos)
+            screen.blit(text_surface,rect)
     pygame.display.flip()
     for event in pygame.event.get():
         if (event.type is MOUSEBUTTONDOWN):
