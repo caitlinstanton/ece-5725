@@ -43,10 +43,10 @@ while code_running:
         elif (event.type is MOUSEBUTTONUP):
             pos = pygame.mouse.get_pos()
             x,y = pos
-            if y > 120:
-                if x < 160:
-                    print 'button1 pressed'
-                else:
+            if y > 160:
+                if x < 120:
+                    print 'start pressed'
+                elif x > 220:
                     print 'quit button pressed'
                     code_running = False
             else:
@@ -55,9 +55,9 @@ while code_running:
                 text_surface = my_font.render(my_text,True,WHITE)
                 rect = text_surface.get_rect(center=(100,100))
                 screen.blit(text_surface,rect)
-                if tap_count < 20:
-                    tap_array[tap_count] = my_text
-                    tap_count = tap_count + 1
+                #if tap_count < 20:
+                 #   tap_array[tap_count] = my_text
+                  #  tap_count = tap_count + 1
     pygame.display.flip()
     if not GPIO.input(27):
         code_running = False
