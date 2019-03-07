@@ -10,13 +10,13 @@ import RPi.GPIO as GPIO
 #                                        - "counter-clockwise"
 def set_direction(PWM_number, direction):
     # Set freq and dc based on desired direction
-    if direction = "stop":
+    if direction == "stop":
         freq = 50
         dc = 0
-    if direction = "clockwise":
+    if direction == "clockwise":
         freq = 46.948
         dc = 6.103
-    if direction = "counter-clockwise":
+    if direction == "counter-clockwise":
         freq = 46.083
         dc = 7.834
     # Update servo with new values
@@ -36,29 +36,36 @@ GPIO.setup(27,GPIO.IN, pull_up_down=GPIO.PUD_UP)
 # Initialize servo objects
 left_servo = GPIO.PWM(13, 50)
 right_servo = GPIO.PWM(26, 50)
+left_servo.start(0)
+right_servo.start(0)
 
 # Left vs Right servo selected
 left = False
 
 # Interrupt function calls
 def stop(channel):
+    print "button 23"
     if left:
         set_direction(left_servo, "stop")
     else:
         set_direction(right_servo, "stop")
 def clockwise(channel):
+    print "button 22"
     if left:
         set_direction(left_servo, "clockwise")
     else:
         set_direction(right_servo, "clockwise")
 def counter_clockwise(channel):
+    print "button 17"
     if left:
         set_direction(left_servo, "counter-clockwise")
     else:
         set_direction(right_servo, "counter-clockwise")
 def swap_servo(channel):
+    print "button 19"
+    global left 
     left = not left
-
+    
 # Attach interrupts to falling edges
 GPIO.add_event_detect(17, GPIO.FALLING, callback=counter_clockwise, bouncetime=200)
 GPIO.add_event_detect(19, GPIO.FALLING, callback=swap_servo, bouncetime=200)
