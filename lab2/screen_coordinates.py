@@ -23,8 +23,7 @@ size = width, height = 320,240
 speed = [5,5]
 speed2 = [7,7]
 screen = pygame.display.set_mode((320,240))
-tap_count = 0
-tap_array = []
+hit_text = ""
 
 my_font = pygame.font.Font(None,30)
 my_buttons = {'start':(80,180),'quit':(240,180)}
@@ -50,14 +49,10 @@ while code_running:
                     print 'quit button pressed'
                     code_running = False
             else:
-                my_text="Hit at " + str(pos[0]) + "," + str(pos[1])
-                print my_text
-                text_surface = my_font.render(my_text,True,WHITE)
-                rect = text_surface.get_rect(center=(100,100))
-                screen.blit(text_surface,rect)
-                #if tap_count < 20:
-                 #   tap_array[tap_count] = my_text
-                  #  tap_count = tap_count + 1
+                if (hit_text != ""):
+                    text_surface = my_font.render(hit_text,True,WHITE)
+                    rect = text_surface.get_rect(center=(100,100))
+                    screen.blit(text_surface,rect)
     pygame.display.flip()
     if not GPIO.input(27):
         code_running = False
