@@ -1,7 +1,20 @@
 # Brandon Quinlan (bmq4) and Caitlin Stanton (cs968)
 # ECE5725, Lab 3, Due 3/21
 
+import os
+import pygame
+from pygame.locals import *
 import RPi.GPIO as GPIO
+
+os.putenv('SDL_VIDEODRIVER','fbcon')
+os.putenv('SDL_FBDEV','/dev/fb0')
+os.putenv('SDL_MOUSEDRV','TSLIB')
+os.putenv('SDL_MOUSEDEV','/dev/input/touchscreen')
+
+pygame.init()
+pygame.mouse.set_visible(False)
+WHITE = 255,255,255
+screen = pygame.display.set_mode((320,240))
 
 def set_direction(PWM_number, direction):
     if direction == "stop":
