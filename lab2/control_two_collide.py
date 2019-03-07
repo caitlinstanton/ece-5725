@@ -1,9 +1,13 @@
+# Brandon Quinlan (bmq4) and Caitlin Stanton (cs968)
+# ECE5725, Lab 2, Due 3/7
+
 import os
 import pygame
 from pygame.locals import *
 import time
 import RPi.GPIO as GPIO
 
+# Initialize variables
 starttime = time.time()
 code_running = True #boolean for running program
 game_running = False #boolean for running ball collision animation
@@ -13,11 +17,13 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(27,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 clock = pygame.time.Clock()
 
+# Display on TFT, use touchscreen
 os.putenv('SDL_VIDEODRIVER','fbcon')
 os.putenv('SDL_FBDEV','/dev/fb1')
 os.putenv('SDL_MOUSEDRV','TSLIB')
 os.putenv('SDL_MOUSEDEV','/dev/input/touchscreen')
 
+# Initialize display constants
 pygame.init()
 pygame.mouse.set_visible(False)
 WHITE = 255,255,255
@@ -33,14 +39,17 @@ ball2_rect = ball2.get_rect(center=(100,100))
 
 my_font = pygame.font.Font(None,30)
 my_buttons = {'start':(40,180),'quit':(280,180)}
-game_buttons = {'pause':(40,180),'fast':(130,180),'slow':(210,180),'back':(280,180)}
+game_buttons = {'pause':(40,180),'fast':(130,180),'slow':(210,180), \
+    'back':(280,180)}
 screen.fill(BLACK)
 hit_text = ""
 
+# Continue looping until quit button or timeout
 while code_running:
     clock.tick(framerate)
     screen.fill(BLACK)
-    if (game_running and not paused): #ball collision displayed 
+    # balls are displayed and not paused - need to update location and speed
+    if (game_running and not paused): 
         ball_rect = ball_rect.move(speed)
         ball2_rect = ball2_rect.move(speed2)
         if ball_rect.left < 0 or ball_rect.right > width:
@@ -51,19 +60,24 @@ while code_running:
             speed2[0] = -speed2[0]
         if ball2_rect.top < 0 or ball2_rect.bottom > height:
             speed2[1] = -speed2[1]
+        # check if balls collide with each other
         if ball_rect.colliderect(ball2_rect):
             speed[0] = -speed[0]
             speed[1] = -speed[1]
             speed2[0] = -speed2[0]
             speed2[1] = -speed[1]
-    if (game_running or paused): #ensures buttons will be displayed/checked whether game is paused/unpaused
-        for my_text, text_pos in game_buttons.items(): #pause,fast,slow,and back buttons displayed
+    # ensures buttons will be displayed/checked whether game is paused/unpaused
+    if (game_running or paused): 
+        # pause,fast,slow,and back buttons displayed
+        for my_text, text_pos in game_buttons.items(): 
             text_surface = my_font.render(my_text,True,WHITE)
             rect = text_surface.get_rect(center=text_pos)
             screen.blit(text_surface,rect)
-        screen.blit(ball,ball_rect) #ball,ball2 are still displayed but shouldn't move
+        # balls displayed (in new location if unpaused)
+        screen.blit(ball,ball_rect) 
         screen.blit(ball2,ball2_rect)
         pygame.display.flip()
+        # Check for button presses
         for event in pygame.event.get():
             if (event.type is MOUSEBUTTONDOWN):
                 pos = pygame.mouse.get_pos()
@@ -86,15 +100,19 @@ while code_running:
                         game_running = False
                         code_running = True
                         paused = False
+    # Balls not displayed - start menu
     else:
-        for my_text, text_pos in my_buttons.items(): #start,quit buttons displayed
+        # start, quit buttons displayed
+        for my_text, text_pos in my_buttons.items(): 
             text_surface = my_font.render(my_text,True,WHITE)
             rect = text_surface.get_rect(center=text_pos)
             screen.blit(text_surface,rect)
+        # Display "hit"
         if (hit_text != ""):
             text_surface = my_font.render(hit_text,True,WHITE)
             rect = text_surface.get_rect(center=(100,100))
             screen.blit(text_surface,rect)
+    # Check start screen button presses
     for event in pygame.event.get():
         if (event.type is MOUSEBUTTONDOWN):
             pos = pygame.mouse.get_pos()
@@ -114,6 +132,7 @@ while code_running:
                 hit_text="Hit at " + str(pos[0]) + "," + str(pos[1])
                 print hit_text
     pygame.display.flip()
+    # Check quit conditions
     if not GPIO.input(27):
         code_running = False
     now = time.time()
