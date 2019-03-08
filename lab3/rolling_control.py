@@ -67,7 +67,13 @@ left = False
 stopped = False
 
 left_log = deque([])
+left_log.append(("Stop", 0))
+left_log.append(("Stop", 0))
+left_log.append(("Stop", 0))
 right_log = deque([])
+right_log.append(("Stop", 0))
+right_log.append(("Stop", 0))
+right_log.append(("Stop", 0))
 
 initial_time = time.time()
 
@@ -121,9 +127,17 @@ while code_running:
         text_surface = text_data[2].render(my_text,True,WHITE)
         rect = text_surface.get_rect(center=(text_data[0], text_data[1]))
         screen.blit(text_surface,rect)
-    for direction, time in left_log:
+    for n in range(3):
+        direction = left_log[n][0]
+        time = left_log[n][1]
         text_surface = data_font.render(direction + " " + str(time),True,WHITE)
-        rect = text_surface.get_rect(center=(text_data[0], text_data[1]))
+        rect = text_surface.get_rect(center=left_coords[n])
+        screen.blit(text_surface,rect)
+    for n in range(3):
+        direction = right_log[n][0]
+        time = right_log[n][1]
+        text_surface = data_font.render(direction + " " + str(time),True,WHITE)
+        rect = text_surface.get_rect(center=right_coords[n]
         screen.blit(text_surface,rect)
     pygame.display.flip()
     if not GPIO.input(27):
