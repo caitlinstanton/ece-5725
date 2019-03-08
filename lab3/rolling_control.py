@@ -8,19 +8,22 @@ import RPi.GPIO as GPIO
 from collections import deque
 import time
 
-os.putenv('SDL_VIDEODRIVER','fbcon')
-os.putenv('SDL_FBDEV','/dev/fb0')
-os.putenv('SDL_MOUSEDRV','TSLIB')
-os.putenv('SDL_MOUSEDEV','/dev/input/touchscreen')
+#os.putenv('SDL_VIDEODRIVER','fbcon')
+#os.putenv('SDL_FBDEV','/dev/fb0')
+#os.putenv('SDL_MOUSEDRV','TSLIB')
+#os.putenv('SDL_MOUSEDEV','/dev/input/touchscreen')
 
 pygame.init()
-pygame.mouse.set_visible(True)
+# pygame.mouse.set_visible(True)
 WHITE = 255,255,255
 BLACK = 0,0,0
 RED = 255,0,0
 GREEN = 0,255,0
 screen = pygame.display.set_mode((320,240))
-game_buttons = {'stop':(210,180),'quit':(280,80)}
+button_font = pygame.font.Font(None,30)
+data_font = pygame.font.Font(None,20)
+game_buttons = {'Left History':(40,20,data_font),'Right History':(260,20,data_font),\
+        'STOP':(160,80,button_font),'Quit':(160,180,button_font)}
 screen.fill(BLACK)
 
 # Function for setting direction of a servo
@@ -110,11 +113,21 @@ GPIO.add_event_detect(19, GPIO.FALLING, callback=swap_servo, bouncetime=200)
 GPIO.add_event_detect(22, GPIO.FALLING, callback=clockwise, bouncetime=200)
 GPIO.add_event_detect(23, GPIO.FALLING, callback=stop, bouncetime=200)
 
+left_coords = [(40,60), (40,100), (40,160)]
+right_coords = [(260,60), (260,100), (260,160)]
+code_running = True
 while code_running:    
-    screen.fill(BLACK)
-    for my_text, text_pos in game_buttons.items(): 
-        text_surface = my_font.render(my_text,True,WHITE)
-        rect = text_surface.get_rect(center=text_pos)
+    for my_text, text_data in game_buttons.items(): 
+        text_surface = text_data[2].render(my_text,True,WHITE)
+        rect = text_surface.get_rect(center=(text_data[0], text_data[1]))
         screen.blit(text_surface,rect)
+    for direction, time in left_log:
+        text_surface = data_font.render(direction + " " + str(time),True,WHITE)
+        rect = text_surface.get_rect(center=(text_data[0], text_data[1]))
+        screen.blit(text_surface,rect)
+    pygame.display.flip()
     if not GPIO.input(27):
         code_running = False
+left_servo.stop()
+right_servo.stop()
+GPIO.cleanup()
