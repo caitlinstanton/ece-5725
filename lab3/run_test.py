@@ -183,7 +183,7 @@ state_var = 0
 state_time = time.time()
 stop_time = state_time
 state_length = 3.0
-go_forward()
+
 
 left_coords = [(40,60), (40,100), (40,140)]
 right_coords = [(260,60), (260,100), (260,140)]
@@ -286,4 +286,5 @@ while True:
                 elif y > 200:
                     print "START button pressed"
                     code_running = True
+                    go_forward()
 GPIO.cleanup()
