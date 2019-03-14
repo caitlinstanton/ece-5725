@@ -23,7 +23,7 @@ screen = pygame.display.set_mode((320,240))
 button_font = pygame.font.Font(None,30)
 data_font = pygame.font.Font(None,20)
 game_buttons = {'Left History':(40,20,data_font),'Right History':(260,20,data_font),\
-        'STOP':(160,80,button_font),'Quit':(160,180,button_font),'RESUME':(160,80,button_font)}
+        'STOP':(160,80,button_font),'Quit':(160,180,button_font),'RESUME':(160,80,button_font), 'START':(160,220,button_font)}
 screen.fill(BLACK)
 
 # Function for setting direction of a servo
@@ -178,45 +178,56 @@ def stop_robot():
     set_direction(right_servo, "stop")
     right_log.append(("Stop", int(now - initial_time)))
     right_log.popleft()
+
 state_var = 0 
 state_time = time.time()
+stop_time = state_time
+state_length = 3.0
 go_forward()
 
 left_coords = [(40,60), (40,100), (40,140)]
 right_coords = [(260,60), (260,100), (260,140)]
-while True:
+code_running = False
+while code_running:
     if state_var%7 == 0:
-        if time.time() - state_time >= 3.0:
+        print "forward state"
+        if time.time() - state_time >= state_length - (stop_time - state_time):
             stop_robot()
             state_time = time.time()
             state_var = state_var + 1
     elif state_var%7 == 1:
-        if time.time() - state_time >= 3.0:
+        print "stop state"
+        if time.time() - state_time >= state_length - (stop_time - state_time):
             go_backward()
             state_time = time.time()
             state_var = state_var + 1
     elif state_var%7 == 2:
-        if time.time() - state_time >= 3.0:
+        print "backwards state"
+        if time.time() - state_time >= state_length - (stop_time - state_time):
             pivot_left()
             state_time = time.time()
             state_var = state_var + 1
     elif state_var%7 == 3:
-        if time.time() - state_time >= 3.0:
+        print "left pivot state"
+        if time.time() - state_time >= state_length - (stop_time - state_time):
             stop_robot()
             state_time = time.time()
             state_var = state_var + 1
     elif state_var%7 == 4:
-        if time.time() - state_time >= 3.0:
+        print "stop state"
+        if time.time() - state_time >= state_length - (stop_time - state_time):
             pivot_right()
             state_time = time.time()
             state_var = state_var + 1
     elif state_var%7 == 5:
-        if time.time() - state_time >= 3.0:
+        print "right pivot state"
+        if time.time() - state_time >= state_length - (stop_time - state_time):
             stop_robot()
             state_time = time.time()
             state_var = state_var + 1
     elif state_var%7 == 6:
-        if time.time() - state_time >= 3.0:
+        print "stop state"
+        if time.time() - state_time >= state_length - (stop_time - state_time):
             go_forward()
             state_time = time.time()
             state_var = state_var + 1
@@ -257,6 +268,7 @@ while True:
                 if y > 60 and y < 100:
                     print "STOP button pressed"
                     stopped = not stopped
+                    stop_time = time.time()
                     if stopped:
                         set_direction(left_servo, "stop")
                         set_direction(right_servo, "stop")
@@ -264,9 +276,12 @@ while True:
                         set_direction(left_servo,left_log[2][0])
                         set_direction(right_servo,right_log[2][0])
                 elif y > 160 and y < 200:
-                    print "QUIT Button pressed"
+                    print "QUIT button pressed"
                     left_servo.stop()
                     right_servo.stop()
                     GPIO.cleanup()
                     exit()
+                elif y > 200:
+                    print "START button pressed"
+                    code_running = True
 GPIO.cleanup()
