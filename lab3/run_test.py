@@ -172,11 +172,11 @@ def pivot_right():
 
 def stop_robot():
     now = time.time()
-    set_direction(left_servo, "counter-clockwise")
-    left_log.append(("Counter-Clk", int(now - initial_time)))
+    set_direction(left_servo, "stop")
+    left_log.append(("Stop", int(now - initial_time)))
     left_log.popleft()
-    set_direction(right_servo, "counter-clockwise")
-    right_log.append(("Counter-Clk", int(now - initial_time)))
+    set_direction(right_servo, "stop")
+    right_log.append(("Stop", int(now - initial_time)))
     right_log.popleft()
 state_var = 0 
 state_time = time.time()
@@ -191,7 +191,7 @@ while True:
             state_time = time.time()
             state_var = state_var + 1
     elif state_var%7 == 1:
-        if time.time() - state_time >= 1.0:
+        if time.time() - state_time >= 3.0:
             go_backward()
             state_time = time.time()
             state_var = state_var + 1
@@ -201,22 +201,22 @@ while True:
             state_time = time.time()
             state_var = state_var + 1
     elif state_var%7 == 3:
-        if time.time() - state_time >= 1.0:
-            stop()
+        if time.time() - state_time >= 3.0:
+            stop_robot()
             state_time = time.time()
             state_var = state_var + 1
     elif state_var%7 == 4:
-        if time.time() - state_time >= 1.0:
+        if time.time() - state_time >= 3.0:
             pivot_right()
             state_time = time.time()
             state_var = state_var + 1
     elif state_var%7 == 5:
-        if time.time() - state_time >= 1.0:
-            stop()
+        if time.time() - state_time >= 3.0:
+            stop_robot()
             state_time = time.time()
             state_var = state_var + 1
     elif state_var%7 == 6:
-        if time.time() - state_time >= 1.0:
+        if time.time() - state_time >= 3.0:
             go_forward()
             state_time = time.time()
             state_var = state_var + 1
