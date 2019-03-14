@@ -180,8 +180,7 @@ def stop_robot():
     right_log.popleft()
 
 state_var = 0 
-state_time = time.time()
-stop_time = state_time
+
 state_length = 3.0
 
 
@@ -286,5 +285,7 @@ while True:
                 elif y > 200:
                     print "START button pressed"
                     code_running = True
+                    state_time = time.time()
+                    stop_time = state_time
                     go_forward()
 GPIO.cleanup()
