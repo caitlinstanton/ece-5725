@@ -231,6 +231,7 @@ while True:
                 go_forward()
                 state_time = time.time()
                 state_var = state_var + 1
+        stop_time = state_time
     screen.fill(BLACK) 
     for my_text, text_data in game_buttons.items(): 
         if stopped and my_text != "STOP":
