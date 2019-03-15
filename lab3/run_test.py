@@ -182,56 +182,63 @@ def stop_robot():
 state_var = 0 
 
 state_length = 3.0
-
+stop_offset = 0.0
 
 left_coords = [(40,60), (40,100), (40,140)]
 right_coords = [(260,60), (260,100), (260,140)]
 code_running = False
 while True:
     if code_running:
-        if state_var%7 == 0:
-            print "forward state"
-            if time.time() - state_time >= state_length - (stop_time - state_time):
-                stop_robot()
-                state_time = time.time()
-                state_var = state_var + 1
-        elif state_var%7 == 1:
-            print "stop state"
-            if time.time() - state_time >= state_length - (stop_time - state_time):
-                go_backward()
-                state_time = time.time()
-                state_var = state_var + 1
-        elif state_var%7 == 2:
-            print "backwards state"
-            if time.time() - state_time >= state_length - (stop_time - state_time):
-                pivot_left()
-                state_time = time.time()
-                state_var = state_var + 1
-        elif state_var%7 == 3:
-            print "left pivot state"
-            if time.time() - state_time >= state_length - (stop_time - state_time):
-                stop_robot()
-                state_time = time.time()
-                state_var = state_var + 1
-        elif state_var%7 == 4:
-            print "stop state"
-            if time.time() - state_time >= state_length - (stop_time - state_time):
-                pivot_right()
-                state_time = time.time()
-                state_var = state_var + 1
-        elif state_var%7 == 5:
-            print "right pivot state"
-            if time.time() - state_time >= state_length - (stop_time - state_time):
-                stop_robot()
-                state_time = time.time()
-                state_var = state_var + 1
-        elif state_var%7 == 6:
-            print "stop state"
-            if time.time() - state_time >= state_length - (stop_time - state_time):
-                go_forward()
-                state_time = time.time()
-                state_var = state_var + 1
-        stop_time = state_time
+        if not stopped:
+            if state_var%7 == 0:
+                print "forward state"
+                if time.time() - state_time >= state_length + stop_offset:
+                    stop_robot()
+                    state_time = time.time()
+                    stop_offset = 0.0
+                    state_var = state_var + 1
+            elif state_var%7 == 1:
+                print "stop state"
+                if time.time() - state_time >= state_length + stop_offset:
+                    go_backward()
+                    state_time = time.time()
+                    stop_offset = 0.0
+                    state_var = state_var + 1
+            elif state_var%7 == 2:
+                print "backwards state"
+                if time.time() - state_time >= state_length + stop_offset:
+                    pivot_left()
+                    state_time = time.time()
+                    stop_offset = 0.0
+                    state_var = state_var + 1
+            elif state_var%7 == 3:
+                print "left pivot state"
+                if time.time() - state_time >= state_length + stop_offset:
+                    stop_robot()
+                    state_time = time.time()
+                    stop_offset = 0.0
+                    state_var = state_var + 1
+            elif state_var%7 == 4:
+                print "stop state"
+                if time.time() - state_time >= state_length + stop_offset:
+                    pivot_right()
+                    state_time = time.time()
+                    stop_offset = 0.0
+                    state_var = state_var + 1
+            elif state_var%7 == 5:
+                print "right pivot state"
+                if time.time() - state_time >= state_length + stop_offset:
+                    stop_robot()
+                    state_time = time.time()
+                    stop_offset = 0.0
+                    state_var = state_var + 1
+            elif state_var%7 == 6:
+                print "stop state"
+                if time.time() - state_time >= state_length + stop_offset:
+                    go_forward()
+                    stop_offset = 0.0
+                    state_time = time.time()
+                    state_var = state_var + 1
     screen.fill(BLACK) 
     for my_text, text_data in game_buttons.items(): 
         if stopped and my_text != "STOP":
@@ -270,11 +277,12 @@ while True:
                     print "STOP button pressed"
                     code_running = False
                     stopped = not stopped
-                    stop_time = time.time()
                     if stopped:
+                        stop_time = time.time()
                         set_direction(left_servo, "stop")
                         set_direction(right_servo, "stop")
                     else:
+                        stop_offset = time.time() - stop_time
                         set_direction(left_servo,left_log[2][0])
                         set_direction(right_servo,right_log[2][0])
                 elif y > 160 and y < 200:
