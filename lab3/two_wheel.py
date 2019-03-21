@@ -43,6 +43,7 @@ right_servo.start(0)
 left = False
 
 # Interrupt function calls
+# Each one, if the not stopped, updates the log and changes the direction
 def stop(channel):
     print "button 23"
     if left:
