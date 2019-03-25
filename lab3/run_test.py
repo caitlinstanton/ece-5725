@@ -8,11 +8,13 @@ import RPi.GPIO as GPIO
 from collections import deque
 import time
 
+# Display on TFT
 os.putenv('SDL_VIDEODRIVER','fbcon')
 os.putenv('SDL_FBDEV','/dev/fb1')
 os.putenv('SDL_MOUSEDRV','TSLIB')
 os.putenv('SDL_MOUSEDEV','/dev/input/touchscreen')
 
+# Initialize pygame constants
 pygame.init()
 pygame.mouse.set_visible(False)
 WHITE = 255,255,255
@@ -64,8 +66,10 @@ right_servo.start(0)
 
 # Left vs Right servo selected
 left = False
+# "panic" button pressed
 stopped = False
 
+# Data structures for logs, initially filled with "stop"s
 left_log = deque([])
 left_log.append(("Stop", 0))
 left_log.append(("Stop", 0))
@@ -75,11 +79,13 @@ right_log.append(("Stop", 0))
 right_log.append(("Stop", 0))
 right_log.append(("Stop", 0))
 
+# Record initial time (for log entries)
 initial_time = time.time()
 print("----")
 print(initial_time)
 
 # Interrupt function calls
+# Each one, if the not stopped, updates the log and changes the direction# Interrupt function calls
 def stop(channel):
     now = time.time()
     if not stopped:
@@ -113,10 +119,12 @@ def counter_clockwise(channel):
             right_log.append(("Counter-Clk", int(now - initial_time)))
             right_log.popleft()
             set_direction(right_servo, "counter-clockwise")
+# Swap which servo is being controlled
 def swap_servo(channel):
     if not stopped:
         global left 
         left = not left
+# Quit button callback
 def exit_program(channel):
     left_servo.stop()
     right_servo.stop()
@@ -170,6 +178,7 @@ def pivot_right():
     right_log.append(("Counter-Clk", int(now - initial_time)))
     right_log.popleft()
 
+# Stop robot
 def stop_robot():
     now = time.time()
     set_direction(left_servo, "stop")
@@ -179,17 +188,32 @@ def stop_robot():
     right_log.append(("Stop", int(now - initial_time)))
     right_log.popleft()
 
+# 0 -> Forward
+# 1 -> Stop
+# 2 -> Backwards
+# 3 -> Stop
+# 4 -> Pivot Left
+# 5 -> Stop
+# 6 -> Pivot Right
+# 7 -> Forward
 state_var = 0 
-
+# How long to spend in each state
 state_length = 3.0
+# How long was spent stopped
 stop_offset = 0.0
 
+# Constants for determine coordinates to write log entries
 left_coords = [(40,60), (40,100), (40,140)]
 right_coords = [(260,60), (260,100), (260,140)]
+# False until "start" is pressed
 code_running = False
+# Run until something causes an exit
 while True:
     if code_running:
+        # If not stopped, check if state should be updated
         if not stopped:
+            # For each state, check if enough time has elapsed, then if it has
+            # it changes the direction and updates the state
             if state_var%7 == 0:
                 print "forward state"
                 if time.time() - state_time >= state_length + stop_offset:
@@ -240,6 +264,7 @@ while True:
                     state_time = time.time()
                     state_var = state_var + 1
     screen.fill(BLACK) 
+    # Display buttons and log headers
     for my_text, text_data in game_buttons.items(): 
         if stopped and my_text != "STOP":
             if my_text == "RESUME":
@@ -253,12 +278,14 @@ while True:
             text_surface = text_data[2].render(my_text,True,WHITE)
             rect = text_surface.get_rect(center=(text_data[0], text_data[1]))
             screen.blit(text_surface,rect)
+    # Display left log
     for n in range(3):
         direction = left_log[n][0]
         log_time = left_log[n][1]
         text_surface = data_font.render(direction + " " + str(log_time),True,WHITE)
         rect = text_surface.get_rect(center=left_coords[n])
         screen.blit(text_surface,rect)
+    # Display right log
     for n in range(3):
         direction = right_log[n][0]
         log_time = right_log[n][1]
@@ -266,6 +293,7 @@ while True:
         rect = text_surface.get_rect(center=right_coords[n])
         screen.blit(text_surface,rect)
     pygame.display.flip()
+    # Check buttons
     for event in pygame.event.get():
         if (event.type is MOUSEBUTTONDOWN):
             pos = pygame.mouse.get_pos()
@@ -273,23 +301,28 @@ while True:
             pos = pygame.mouse.get_pos()
             x,y = pos
             if x > 140 and x < 200:
+                # "panic" button - pause or resume
                 if y > 60 and y < 100:
                     print "STOP button pressed"
                     stopped = not stopped
                     if stopped:
+                        # record time of pause
                         stop_time = time.time()
                         set_direction(left_servo, "stop")
                         set_direction(right_servo, "stop")
                     else:
-                        stop_offset = time.time() - stop_time
+                        # Increment stop_offset by time spent paused
+                        stop_offset = stop_offset + time.time() - stop_time
                         set_direction(left_servo,left_log[2][0])
                         set_direction(right_servo,right_log[2][0])
+                # Quit button - stop running
                 elif y > 160 and y < 200:
                     print "QUIT button pressed"
                     left_servo.stop()
                     right_servo.stop()
                     GPIO.cleanup()
                     exit()
+                # Start button - begin running
                 elif y > 200:
                     print "START button pressed"
                     code_running = True
