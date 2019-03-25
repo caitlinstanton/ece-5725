@@ -275,7 +275,6 @@ while True:
             if x > 140 and x < 200:
                 if y > 60 and y < 100:
                     print "STOP button pressed"
-                    code_running = False
                     stopped = not stopped
                     if stopped:
                         stop_time = time.time()
