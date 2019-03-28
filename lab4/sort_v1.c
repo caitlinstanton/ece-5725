@@ -28,7 +28,7 @@ int main()
         data[c] = rand() % 256;
     }
     // sort the array in numerical order 
-    //  qsort(data, sizeof(data)/sizeof(*data), sizeof(*data), comp);
+    qsort(data, sizeof(data)/sizeof(*data), sizeof(*data), comp);
     printf ("size of data = %d, size of *data = %d\n", sizeof(data), sizeof(*data) );
     // 
     clock_t start = clock();  // start a timer
