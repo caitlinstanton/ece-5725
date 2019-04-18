@@ -9,8 +9,9 @@ GPIO.setup(13, GPIO.OUT)
 
 # Define constants
 GPIO_pin = 13
-freq = 46.5116279
-dc = 6.97674419
+on_time = 1.5
+freq = 1000.0/(20.0+on_time)
+dc = 100.0*(on_time/(20.0+on_time))
 
 account_sid = 'AC04b78b8dc7118d877990cb3513cfb406'
 auth_token = 'bca894f066779ee1b55a0b52231993ca'
