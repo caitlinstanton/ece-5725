@@ -1,4 +1,5 @@
 import RPi.GPIO as GPIO
+import time
 
 # Set up GPIO
 GPIO.setmode(GPIO.BCM)
@@ -15,10 +16,6 @@ dc = 100.0*(on_time/(20.0+on_time))
 # Start PWM
 p = GPIO.PWM(GPIO_pin, freq)
 p.start(dc)
-
-# Continue until quit button pressed
-while GPIO.input(27):
-    pass
-
+time.sleep(3)
 p.stop()
 GPIO.cleanup()
