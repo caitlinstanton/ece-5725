@@ -22,17 +22,16 @@ while (food_time != current_time):
     current_time = (datetime.datetime.now().time().hour, datetime.datetime.now().time().minute)
 print("Time for food!")
 
-if food_time == current_time:
-    message = client.messages.create(
-    	body=current_time,
-    	from_='+19179946042',
-    	to='+16465521948'
-    )
-    print(message.sid)
+message = client.messages.create(
+	body=current_time,
+	from_='+19179946042',
+	to='+16465521948'
+)
+#print(message.sid)
 
-    # Start PWM
-    p = GPIO.PWM(GPIO_pin, freq)
-    p.start(dc)
+# Start PWM
+p = GPIO.PWM(GPIO_pin, freq)
+p.start(dc)
 
 # Continue until quit button pressed
 while GPIO.input(27):
