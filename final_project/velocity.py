@@ -22,7 +22,7 @@ import time
 import datetime
 import RPi.GPIO as GPIO
 
-timeVal = [0,0]
+timeVal = []
 
 def sensorCallback(channel):
   # Called if sensor output changes
@@ -34,11 +34,30 @@ def sensorCallback(channel):
   else:
     # Magnet
     print("Sensor LOW " + stamp)
+    calculatePeriod(stamp)
 
 def calculatePeriod(magnetPass):
-  timeVal[0] = timeVal[1]
-  timeVal[1] = magnetPass
-  period = timeVal[1] - timeVal[0]
+  if timeVal.len() == 2:
+      timeVal[0] = timeVal[1]
+      timeVal[1] = magnetPass
+    if timeVal.len() == 1:
+        timeVal[1] = magnetPass
+    if timeVal.len() == 0:
+        timeVal
+  if timeVal[0] != '':
+      start = timeVal[0].total_seconds()
+  else:
+      start = 0
+  if timeVal[1] != '':
+      end = timeVal[1].total_seconds()
+  else: 
+      end = 0
+      #period = end - start
+  period = end-start
+  print(period)
+  print(timeVal[0])
+  print(timeVal[1])
+  print("\n")
 
 def main():
   # Wrap main content in a try block so we can
@@ -48,22 +67,10 @@ def main():
   # messages.
 
   # Get initial reading
-<<<<<<< HEAD
   sensorCallback(12)
-
-=======
-  #sensorCallback(18)
-  #print(GPIO.input(18))
->>>>>>> 1d925e171e310745d8944121dcccd9d125c4a964
   try:
     # Loop until users quits with CTRL-C
     while True :
-        if (GPIO.input(10) == False):
-            print("yee magnet")
-            GPIO.output(18,True)
-        else:
-            print("no magnet")
-            GPIO.output(18,False)
         time.sleep(0.1)
 
   except KeyboardInterrupt:
@@ -77,14 +84,8 @@ print("Setup GPIO pin as input on GPIO18")
 
 # Set Switch GPIO as input
 # Pull high by default
-<<<<<<< HEAD
 GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(12, GPIO.BOTH, callback=sensorCallback, bouncetime=200)
-=======
-GPIO.setup(10, GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
-GPIO.add_event_detect(10, GPIO.BOTH, callback=sensorCallback, bouncetime=200)
-GPIO.setup(18,GPIO.OUT)
->>>>>>> 1d925e171e310745d8944121dcccd9d125c4a964
 
 if __name__=="__main__":
    main()
