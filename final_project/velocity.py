@@ -22,6 +22,8 @@ import time
 import datetime
 import RPi.GPIO as GPIO
 
+timeVal = [0,0]
+
 def sensorCallback(channel):
   # Called if sensor output changes
   timestamp = time.time()
@@ -33,6 +35,11 @@ def sensorCallback(channel):
     # Magnet
     print("Sensor LOW " + stamp)
 
+def calculatePeriod(magnetPass):
+  timeVal[0] = timeVal[1]
+  timeVal[1] = magnetPass
+  period = timeVal[1] - timeVal[0]
+
 def main():
   # Wrap main content in a try block so we can
   # catch the user pressing CTRL-C and run the
@@ -41,12 +48,23 @@ def main():
   # messages.
 
   # Get initial reading
-  sensorCallback(17)
+<<<<<<< HEAD
+  sensorCallback(12)
 
+=======
+  #sensorCallback(18)
+  #print(GPIO.input(18))
+>>>>>>> 1d925e171e310745d8944121dcccd9d125c4a964
   try:
     # Loop until users quits with CTRL-C
     while True :
-      time.sleep(0.1)
+        if (GPIO.input(10) == False):
+            print("yee magnet")
+            GPIO.output(18,True)
+        else:
+            print("no magnet")
+            GPIO.output(18,False)
+        time.sleep(0.1)
 
   except KeyboardInterrupt:
     # Reset GPIO settings
@@ -55,12 +73,18 @@ def main():
 # Tell GPIO library to use GPIO references
 GPIO.setmode(GPIO.BCM)
 
-print("Setup GPIO pin as input on GPIO17")
+print("Setup GPIO pin as input on GPIO18")
 
 # Set Switch GPIO as input
 # Pull high by default
-GPIO.setup(17 , GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(17, GPIO.BOTH, callback=sensorCallback, bouncetime=200)
+<<<<<<< HEAD
+GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.add_event_detect(12, GPIO.BOTH, callback=sensorCallback, bouncetime=200)
+=======
+GPIO.setup(10, GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+GPIO.add_event_detect(10, GPIO.BOTH, callback=sensorCallback, bouncetime=200)
+GPIO.setup(18,GPIO.OUT)
+>>>>>>> 1d925e171e310745d8944121dcccd9d125c4a964
 
 if __name__=="__main__":
    main()
