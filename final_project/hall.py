@@ -22,6 +22,8 @@ import time
 import datetime
 import RPi.GPIO as GPIO
 
+timeVal = [0,0]
+
 def sensorCallback(channel):
   # Called if sensor output changes
   timestamp = time.time()
@@ -33,6 +35,11 @@ def sensorCallback(channel):
     # Magnet
     print("Sensor LOW " + stamp)
 
+def calculatePeriod(magnetPass):
+  timeVal[0] = timeVal[1]
+  timeVal[1] = magnetPass
+  period = timeVal[1] - timeVal[0]
+
 def main():
   # Wrap main content in a try block so we can
   # catch the user pressing CTRL-C and run the
@@ -41,7 +48,7 @@ def main():
   # messages.
 
   # Get initial reading
-  sensorCallback(17)
+  sensorCallback(12)
 
   try:
     # Loop until users quits with CTRL-C
@@ -59,8 +66,8 @@ print("Setup GPIO pin as input on GPIO17")
 
 # Set Switch GPIO as input
 # Pull high by default
-GPIO.setup(17 , GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(17, GPIO.BOTH, callback=sensorCallback, bouncetime=200)
+GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.add_event_detect(12, GPIO.BOTH, callback=sensorCallback, bouncetime=200)
 
 if __name__=="__main__":
    main()
