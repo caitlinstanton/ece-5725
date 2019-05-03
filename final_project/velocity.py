@@ -70,7 +70,8 @@ def playFetch():
   print(on_time)
   global on_time
   on_time = 1.7
-  p.ChangeFrequency(1000.0/(20.0+on_time))
+  p.ChangeFrequency(1000.0/(20.0+on_time)
+          time.sleep()
 
 def stopServo():
     global on_time
