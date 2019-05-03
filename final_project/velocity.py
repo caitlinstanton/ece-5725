@@ -29,6 +29,21 @@ circumference = math.pi*diameter
 numPasses = 0
 velocity = 0 #cm/s
 
+servoPin = 13
+on_time = 1.3
+freq = 1000.0/(20.0+on_time)
+dc = 100.0*(on_time/(20.0+on_time))
+
+
+# Tell GPIO library to use GPIO references
+GPIO.setmode(GPIO.BCM)
+
+# Set Switch GPIO as input
+# Pull high by default
+GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(13,GPIO.OUT)
+GPIO.add_event_detect(12, GPIO.BOTH, callback=sensorCallback, bouncetime=200)
+
 def sensorCallback(channel):
   # Called if sensor output changes
   stamp = time.time()
@@ -39,6 +54,8 @@ def sensorCallback(channel):
     # Magnet
     print("Sensor LOW ")
     calculate(stamp)
+    if velocity > 50 or numPasses > 10:
+      playFetch()
 
 def calculate(magnetPass):
   global numPasses
@@ -50,6 +67,10 @@ def calculate(magnetPass):
   global velocity
   velocity = circumference/period
   #print(velocity)
+
+def playFetch():
+  p = GPIO.PWM(servoPin,freq)
+  p.start(dc)
 
 def main():
   # Wrap main content in a try block so we can
@@ -68,16 +89,6 @@ def main():
   except KeyboardInterrupt:
     # Reset GPIO settings
     GPIO.cleanup()
-
-# Tell GPIO library to use GPIO references
-GPIO.setmode(GPIO.BCM)
-
-print("Setup GPIO pin as input on GPIO18")
-
-# Set Switch GPIO as input
-# Pull high by default
-GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(12, GPIO.BOTH, callback=sensorCallback, bouncetime=200)
 
 if __name__=="__main__":
    main()
