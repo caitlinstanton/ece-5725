@@ -21,43 +21,35 @@
 import time
 import datetime
 import RPi.GPIO as GPIO
+import math
 
-timeVal = []
+timeVal = [0,0]
+diameter = 15.24 #centimeters
+circumference = math.pi*diameter
+numPasses = 0
+velocity = 0 #cm/s
 
 def sensorCallback(channel):
   # Called if sensor output changes
-  timestamp = time.time()
-  stamp = datetime.datetime.fromtimestamp(timestamp).strftime('%H:%M:%S')
+  stamp = time.time()
   if GPIO.input(channel):
     # No magnet
-    print("Sensor HIGH " + stamp)
+    print("Sensor HIGH ")
   else:
     # Magnet
-    print("Sensor LOW " + stamp)
-    calculatePeriod(stamp)
+    print("Sensor LOW ")
+    calculate(stamp)
 
-def calculatePeriod(magnetPass):
-  if timeVal.len() == 2:
-      timeVal[0] = timeVal[1]
-      timeVal[1] = magnetPass
-    if timeVal.len() == 1:
-        timeVal[1] = magnetPass
-    if timeVal.len() == 0:
-        timeVal
-  if timeVal[0] != '':
-      start = timeVal[0].total_seconds()
-  else:
-      start = 0
-  if timeVal[1] != '':
-      end = timeVal[1].total_seconds()
-  else: 
-      end = 0
-      #period = end - start
-  period = end-start
-  print(period)
-  print(timeVal[0])
-  print(timeVal[1])
-  print("\n")
+def calculate(magnetPass):
+  global numPasses
+  numPasses = numPasses + 1
+  timeVal[0] = timeVal[1]
+  timeVal[1] = magnetPass
+  period = timeVal[1]-timeVal[0]
+  #print(period)
+  global velocity
+  velocity = circumference/period
+  #print(velocity)
 
 def main():
   # Wrap main content in a try block so we can
