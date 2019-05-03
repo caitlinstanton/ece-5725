@@ -34,16 +34,6 @@ on_time = 1.3
 freq = 1000.0/(20.0+on_time)
 dc = 100.0*(on_time/(20.0+on_time))
 
-
-# Tell GPIO library to use GPIO references
-GPIO.setmode(GPIO.BCM)
-
-# Set Switch GPIO as input
-# Pull high by default
-GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(13,GPIO.OUT)
-GPIO.add_event_detect(12, GPIO.BOTH, callback=sensorCallback, bouncetime=200)
-
 def sensorCallback(channel):
   # Called if sensor output changes
   stamp = time.time()
@@ -89,6 +79,15 @@ def main():
   except KeyboardInterrupt:
     # Reset GPIO settings
     GPIO.cleanup()
+
+# Tell GPIO library to use GPIO references
+GPIO.setmode(GPIO.BCM)
+
+# Set Switch GPIO as input
+# Pull high by default
+GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(13,GPIO.OUT)
+GPIO.add_event_detect(12, GPIO.BOTH, callback=sensorCallback, bouncetime=200)
 
 if __name__=="__main__":
    main()
