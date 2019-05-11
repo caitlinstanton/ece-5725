@@ -30,14 +30,15 @@ numPasses = 0
 velocity = 0 #cm/s
 
 servoPin = 13
-on_time = 1.5
-freq = 1000.0/(20.0+on_time)
-dc = 100.0*(on_time/(20.0+on_time))
+#freq = 1000.0/(20.0+on_time)
+dc = 5 #left position:5, middle:7.5, right:10 
+#100.0*(on_time/(20.0+on_time))
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(servoPin,GPIO.OUT)
-p = GPIO.PWM(servoPin,freq)
+p = GPIO.PWM(servoPin,50)
 p.start(dc)
+dc = 7.5
 
 def sensorCallback(channel):
   # Called if sensor output changes
@@ -67,11 +68,11 @@ def calculate(magnetPass):
   #print(velocity)
 
 def playFetch():
-  print(on_time)
-  global on_time
-  on_time = 1.7
-  p.ChangeFrequency(1000.0/(20.0+on_time)
-          time.sleep()
+  #print(on_time)
+  global dc
+  p.ChangeDutyCycle(dc)
+  dc = 5
+  time.sleep(0.1)
 
 def stopServo():
     global on_time
