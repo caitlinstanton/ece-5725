@@ -10,8 +10,8 @@ print "socket binded to port %s" %(port)
 s.listen(5)
 print "socket is listening"
 
-while True:
+def pi_zero_message(text):
     c,addr = s.accept()
     print "got connection %s %s" %(c,addr)
-    c.send("Thank you for connecting")
+    c.send(text)
     c.close()

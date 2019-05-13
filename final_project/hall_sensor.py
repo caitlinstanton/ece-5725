@@ -1,27 +1,9 @@
-#!/usr/bin/python
-#--------------------------------------
-#    ___  ___  _ ____
-#   / _ \/ _ \(_) __/__  __ __
-#  / , _/ ___/ /\ \/ _ \/ // /
-# /_/|_/_/  /_/___/ .__/\_, /
-#                /_/   /___/
-#
-#       Hall Effect Sensor
-#
-# This script tests the sensor on GPIO17.
-#
-# Author : Matt Hawkins
-# Date   : 08/05/2018
-#
-# https://www.raspberrypi-spy.co.uk/
-#
-#--------------------------------------
-
-# Import required libraries
 import time
 import datetime
 import RPi.GPIO as GPIO
 import math
+import sms
+import server
 
 timeVal = [0,0]
 diameter = 15.24 #centimeters
@@ -29,16 +11,7 @@ circumference = math.pi*diameter
 numPasses = 0
 velocity = 0 #cm/s
 
-servoPin = 13
-#freq = 1000.0/(20.0+on_time)
-dc = 5 #left position:5, middle:7.5, right:10 
-#100.0*(on_time/(20.0+on_time))
-
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(servoPin,GPIO.OUT)
-p = GPIO.PWM(servoPin,50)
-p.start(dc)
-dc = 7.5
 
 def sensorCallback(channel):
   # Called if sensor output changes
@@ -53,8 +26,8 @@ def sensorCallback(channel):
     #print(numPasses)
     #print(velocity)
     if velocity > 50 or numPasses > 10:
-        print("hello")
-        #playFetch()
+        notifs.send_message("Playing fetch!")
+        server.pi_zero_message("hi")
 
 def calculate(magnetPass):
   global numPasses
@@ -66,18 +39,6 @@ def calculate(magnetPass):
   global velocity
   velocity = circumference/period
   #print(velocity)
-
-def playFetch():
-  #print(on_time)
-  global dc
-  p.ChangeDutyCycle(dc)
-  dc = 5
-  time.sleep(0.1)
-
-def stopServo():
-    global on_time
-    on_time = 1.5
-    p.ChangeFrequency(1000.0/(20.0+on_time))
 
 def main():
   # Wrap main content in a try block so we can
