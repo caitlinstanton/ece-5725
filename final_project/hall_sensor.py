@@ -3,6 +3,7 @@ import datetime
 import RPi.GPIO as GPIO
 import math
 import messages
+import socket
 
 timeVal = [0,0]
 diameter = 15.24 #centimeters
@@ -12,13 +13,13 @@ velocity = 0 #cm/s
 
 s = socket.socket()
 print "socket successfully created"
-port = 5005
+port = 5725
 s.bind(('',port))
 print "socket binded to port %s" %(port)
 s.listen(5)
 print "socket is listening"
 c,addr = s.accept()
-
+print "c"
 GPIO.setmode(GPIO.BCM)
 
 def sensorCallback(channel):
