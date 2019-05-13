@@ -54,7 +54,7 @@ def sensorCallback(channel):
     #print(velocity)
     if velocity > 50 or numPasses > 10:
         print("hello")
-        playFetch()
+        #playFetch()
 
 def calculate(magnetPass):
   global numPasses
