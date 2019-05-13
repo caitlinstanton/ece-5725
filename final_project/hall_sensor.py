@@ -10,6 +10,12 @@ circumference = math.pi*diameter
 numPasses = 0
 velocity = 0 #cm/s
 
+s = socket.socket()
+print "socket successfully created"
+port = 5725
+s.bind(('',port))
+print "socket binded to port %s" %(port)
+
 GPIO.setmode(GPIO.BCM)
 
 def sensorCallback(channel):
@@ -26,11 +32,6 @@ def sensorCallback(channel):
     #print(velocity)
     if velocity > 50 or numPasses > 10:
         messages.send_sms("Playing fetch!")
-        s = socket.socket()
-        print "socket successfully created"
-        port = 5725
-        s.bind(('',port))
-        print "socket binded to port %s" %(port)
         s.listen(5)
         print "socket is listening"
         s = socket.socket()
