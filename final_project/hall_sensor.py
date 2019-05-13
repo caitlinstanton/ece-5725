@@ -12,9 +12,12 @@ velocity = 0 #cm/s
 
 s = socket.socket()
 print "socket successfully created"
-port = 5725
+port = 5005
 s.bind(('',port))
 print "socket binded to port %s" %(port)
+s.listen(5)
+print "socket is listening"
+c,addr = s.accept()
 
 GPIO.setmode(GPIO.BCM)
 
@@ -32,14 +35,10 @@ def sensorCallback(channel):
     #print(velocity)
     if velocity > 50 or numPasses > 10:
         messages.send_sms("Playing fetch!")
-        s.listen(5)
-        print "socket is listening"
-        s = socket.socket()
-        s.bind(('',5725))
-        s.listen(5)
-        c,addr = s.accept()
+        global c
+        global addr
         print "got connection %s %s" %(c,addr)
-        c.send(text)
+        c.send("hi")
         c.close()
 
 def calculate(magnetPass):
