@@ -10,7 +10,7 @@ circumference = math.pi*diameter
 numPasses = 0
 velocity = 0 #cm/s
 
-s = socket.socket()
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print "socket successfully created"
 port = 5005
 s.bind(('',port))
