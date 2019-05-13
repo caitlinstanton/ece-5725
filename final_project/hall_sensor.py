@@ -2,8 +2,7 @@ import time
 import datetime
 import RPi.GPIO as GPIO
 import math
-import sms
-import server
+import messages
 
 timeVal = [0,0]
 diameter = 15.24 #centimeters
@@ -26,8 +25,8 @@ def sensorCallback(channel):
     #print(numPasses)
     #print(velocity)
     if velocity > 50 or numPasses > 10:
-        notifs.send_message("Playing fetch!")
-        server.pi_zero_message("hi")
+        messages.send_sms("Playing fetch!")
+        messages.pi_zero_message("hi")
 
 def calculate(magnetPass):
   global numPasses
@@ -56,8 +55,6 @@ def main():
 
   except KeyboardInterrupt:
     # Reset GPIO settings
-    stopServo()
-    p.stop()
     GPIO.cleanup()
 
 # Set Switch GPIO as input
