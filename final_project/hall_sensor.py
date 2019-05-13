@@ -26,7 +26,20 @@ def sensorCallback(channel):
     #print(velocity)
     if velocity > 50 or numPasses > 10:
         messages.send_sms("Playing fetch!")
-        messages.pi_zero_message("hi")
+        s = socket.socket()
+        print "socket successfully created"
+        port = 5725
+        s.bind(('',port))
+        print "socket binded to port %s" %(port)
+        s.listen(5)
+        print "socket is listening"
+        s = socket.socket()
+        s.bind(('',5725))
+        s.listen(5)
+        c,addr = s.accept()
+        print "got connection %s %s" %(c,addr)
+        c.send(text)
+        c.close()
 
 def calculate(magnetPass):
   global numPasses
