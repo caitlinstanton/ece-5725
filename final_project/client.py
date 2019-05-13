@@ -1,11 +1,15 @@
 import socket
 
-def connect():
-	s = socket.socket()
-	port = 6166
-	s.connect(('10.148.2.162',port))
-	print s.recv(1024)
-	s.close()
+def client_connect():
+    print "a"
+    s = socket.socket()
+    print "b"
+    port = 5725
+    print "C"
+    s.connect(('128.253.17.10',port))
+    print "connected"
+    print s.recv(1024)
+    s.close()
 
 if __name__=="__main__":
-   connect()
+   client_connect()

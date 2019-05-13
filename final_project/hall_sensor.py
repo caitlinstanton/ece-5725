@@ -3,6 +3,7 @@ import datetime
 import RPi.GPIO as GPIO
 import math
 import messages
+import socket 
 
 timeVal = [0,0]
 diameter = 15.24 #centimeters
