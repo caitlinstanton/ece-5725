@@ -1,22 +1,23 @@
 import socket
 
 s = socket.socket()
-s.bind(('0.0.0.0',5725))
-s.listen(5)
-c,addr = s.accept()
-print "got connection %s %s" %(c,addr)
+s.bind(('',2019))
+servo = False
 
-'''
-def client_connect():
-    
-    s = socket.socket()
-    print "b"
-    port = 5725
-    print "C"
-    s.connect(('128.253.17.53',port))
-    print "connected"
-    print s.recv(1024)
-    s.close()
+def waiting():
+    s.listen(5)
+    c,addr = s.accept()
+    print "got connection %s %s" %(c,addr)
+    global servo
+    servo = True
+
+def playFetch():
+    print "yeet"
 
 if __name__=="__main__":
-   client_connect()'''
+    while True:
+        if servo:
+            playFetch()
+            servo = False
+        else:
+            waiting()
