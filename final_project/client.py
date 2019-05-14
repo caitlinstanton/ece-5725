@@ -1,13 +1,12 @@
 import socket
 
-s = socket.socket()
-s.bind(('',5725))
-s.listen(5)
-c,addr = s.accept()
-print "got connection %s %s" %(c,addr)
-c.send(c)
-
 while True:
+    s = socket.socket()
+    s.bind(('0.0.0.0',5725))
+    s.listen(5)
+    c,addr = s.accept()
+    print "got connection %s %s" %(c,addr)
+    c.send(addr)
     action = s.recv(1024)
     print action
 
