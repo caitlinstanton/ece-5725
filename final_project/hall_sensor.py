@@ -3,11 +3,7 @@ import datetime
 import RPi.GPIO as GPIO
 import math
 import messages
-<<<<<<< HEAD
-import socket 
-=======
 import socket
->>>>>>> 550bbe038e8c587abf7c0f385db9ecbf61b63eb1
 
 timeVal = [0,0]
 diameter = 15.24 #centimeters
@@ -15,15 +11,6 @@ circumference = math.pi*diameter
 numPasses = 0
 velocity = 0 #cm/s
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-print "socket successfully created"
-port = 5725
-s.bind(('',port))
-print "socket binded to port %s" %(port)
-s.listen(5)
-print "socket is listening"
-c,addr = s.accept()
-print "c"
 GPIO.setmode(GPIO.BCM)
 
 def sensorCallback(channel):
@@ -40,11 +27,13 @@ def sensorCallback(channel):
     #print(velocity)
     if velocity > 50 or numPasses > 10:
         messages.send_sms("Playing fetch!")
-        global c
-        global addr
-        print "got connection %s %s" %(c,addr)
-        c.send("hi")
-        c.close()
+        s = socket.socket()
+        s.connect(('10.148.2.162',5725))
+        print "connected"
+        server = s.recv(1024)
+        print server
+        server.send("fetch")
+        s.close()
 
 def calculate(magnetPass):
   global numPasses
