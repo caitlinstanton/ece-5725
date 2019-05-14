@@ -26,7 +26,7 @@ def sensorCallback(channel):
     #print(numPasses)
     #print(velocity)
     if velocity > 50 or numPasses > 10:
-        messages.send_sms("Playing fetch!")
+        #messages.send_sms("Playing fetch!")
         s = socket.socket()
         s.connect(('10.148.2.162',5725))
         print "connected"
