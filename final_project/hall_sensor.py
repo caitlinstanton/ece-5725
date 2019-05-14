@@ -23,12 +23,10 @@ def sensorCallback(channel):
     # Magnet
     print("Sensor LOW ")
     calculate(stamp)
-    #print(numPasses)
-    #print(velocity)
     if velocity > 50 or numPasses > 10:
         #messages.send_sms("Playing fetch!")
         s = socket.socket()
-        s.connect(('10.148.2.162',5725))
+        s.connect(('10.148.12.144',2019))
         print "connected"
         server = s.recv(1024)
         s.close()
