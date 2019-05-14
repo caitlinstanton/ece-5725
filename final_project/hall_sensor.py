@@ -31,8 +31,6 @@ def sensorCallback(channel):
         s.connect(('10.148.2.162',5725))
         print "connected"
         server = s.recv(1024)
-        print server
-        server.send("fetch")
         s.close()
 
 def calculate(magnetPass):
