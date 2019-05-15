@@ -19,9 +19,10 @@ on_time = 1.2
 freq = 1000.0/(20.0+on_time)
 dc = 100.0*(on_time/(20.0+on_time))
 GPIO.setup(13,GPIO.OUT)
+GPIO.setup(5,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 p = GPIO.PWM(GPIO_pin, freq)
 p.start(dc)
-food_time = (15,21)
+food_time = (15,55)
 current_time = (datetime.datetime.now().time().hour, datetime.datetime.now().time().minute)
 
 #GPIO.setmode(GPIO.BCM)
@@ -31,10 +32,10 @@ def fetchCallback(channel):
   stamp = time.time()
   if GPIO.input(channel):
     # No magnet
-    print("Sensor HIGH ")
+    print("Sensor HIGH")
   else:
     # Magnet
-    print("Sensor LOW ")
+    print("Sensor LOW")
     calculate(stamp)
     if velocity > 50 or numPasses > 10:
         print "hall"
@@ -76,14 +77,14 @@ def main():
 
   # Get initial reading
   fetchCallback(12)
-  petCallback(13)
+  #petCallback(13)
   global current_time
 
   while (food_time != current_time):
       current_time = (datetime.datetime.now().time().hour, datetime.datetime.now().time().minute)
   print("Time for food!")
 
-  change_PWM(2, p)
+  change_PWM(2.5, p)
   time.sleep(1)
   while GPIO.input(5):
       pass
@@ -105,9 +106,6 @@ GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(12, GPIO.BOTH, callback=fetchCallback, bouncetime=200)
 #GPIO.setup(13,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 #GPIO.add_event_detect(13,GPIO.BOTH,callback=petCallback,bouncetime=200)
-
-#GPIO.setup(13, GPIO.OUT)
-GPIO.setup(5,GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 if __name__=="__main__":
    main()
