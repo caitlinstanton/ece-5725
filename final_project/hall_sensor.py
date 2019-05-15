@@ -5,7 +5,7 @@ import math
 import socket
 
 import messages
-import servomotion
+#import servomotion
 
 timeVal = [0,0]
 diameter = 15.24 #centimeters
@@ -36,9 +36,9 @@ def fetchCallback(channel):
         numPasses = 0'''
 
 def petCallback(channel):
-  if !(GPIO.input(channel)):
+  if not (GPIO.input(channel)):
       print "Pet in range"
-      servomotion.pet()
+      #servomotion.pet()
 
 def calculate(magnetPass):
   global numPasses
