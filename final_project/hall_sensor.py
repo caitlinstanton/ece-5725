@@ -13,6 +13,15 @@ circumference = math.pi*diameter
 numPasses = 0
 velocity = 0 #cm/s
 
+GPIO_pin = 13
+on_time = 1.2
+freq = 1000.0/(20.0+on_time)
+dc = 100.0*(on_time/(20.0+on_time))
+p = GPIO.PWM(GPIO_pin, freq)
+p.start(dc)
+food_time = (15,15)
+current_time = (datetime.datetime.now().time().hour, datetime.datetime.now().time().minute)
+
 GPIO.setmode(GPIO.BCM)
 
 def fetchCallback(channel):
@@ -29,17 +38,12 @@ def fetchCallback(channel):
         print "hall"
         global numPasses
         #messages.send_sms("Playing fetch!")
-        s = socket.socket()
+        '''s = socket.socket()
         s.connect(('10.148.12.144',5725))
         print "connected"
         server = s.recv(1024)
-        s.close()
+        s.close()'''
         numPasses = 0
-
-def petCallback(channel):
-  if not (GPIO.input(channel)):
-      print "Pet in range"
-      #servomotion.pet()
 
 def calculate(magnetPass):
   global numPasses
@@ -47,10 +51,19 @@ def calculate(magnetPass):
   timeVal[0] = timeVal[1]
   timeVal[1] = magnetPass
   period = timeVal[1]-timeVal[0]
-  #print(period)
   global velocity
   velocity = circumference/period
-  #print(velocity)
+
+def change_PWM(on_time, p):
+    freq = 1000.0/(20.0+on_time)
+    dc = 100.0*(on_time/(20.0+on_time))
+    p.ChangeFrequency(freq)
+    p.ChangeDutyCycle(dc)
+
+def petCallback(channel):
+  if not (GPIO.input(channel)):
+      print "Pet in range"
+      #servomotion.pet()
 
 def main():
   # Wrap main content in a try block so we can
@@ -62,6 +75,16 @@ def main():
   # Get initial reading
   fetchCallback(12)
   petCallback(13)
+
+  while (food_time != current_time):
+      current_time = (datetime.datetime.now().time().hour, datetime.datetime.now().time().minute)
+  print("Time for food!")
+
+  change_PWM(2, p)
+  while GPIO.input(5):
+      pass
+  change_PWM(1.2, p)
+
   try:
     # Loop until users quits with CTRL-C
     while True :
@@ -69,6 +92,7 @@ def main():
 
   except KeyboardInterrupt:
     # Reset GPIO settings
+    p.stop()
     GPIO.cleanup()
 
 # Set Switch GPIO as input
@@ -77,6 +101,9 @@ GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(12, GPIO.BOTH, callback=fetchCallback, bouncetime=200)
 GPIO.setup(13,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(13,GPIO.BOTH,callback=petCallback,bouncetime=200)
+
+GPIO.setup(13, GPIO.OUT)
+GPIO.setup(5,GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 if __name__=="__main__":
    main()
