@@ -24,16 +24,16 @@ def fetchCallback(channel):
     # Magnet
     print("Sensor LOW")
     calculate(stamp)
-    if velocity > 50 or numPasses > 10:
+    global velocity
+    if velocity > 200:
         print "hall"
-        global numPasses
-        #messages.send_sms("Playing fetch!")
-        '''s = socket.socket()
+        messages.send_sms("Playing fetch!")
+        s = socket.socket()
         s.connect(('10.148.12.144',5725))
         print "connected"
         server = s.recv(1024)
-        s.close()'''
-        numPasses = 0
+        s.close()
+        velocity = 0
 
 def calculate(magnetPass):
   global numPasses
@@ -61,7 +61,6 @@ def main():
 
   except KeyboardInterrupt:
     # Reset GPIO settings
-    p.stop()
     GPIO.cleanup()
 
 # Set Switch GPIO as input

@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import time
+import messages
 
 # Set up GPIO
 GPIO.setmode(GPIO.BCM)
@@ -20,13 +21,15 @@ def change_PWM(on_time, p):
     p.ChangeDutyCycle(dc)
 
 def petCallback(channel):
-  motion = [1.3,1.7]
+  motion2 = [1.3,1.7]
+  motion1 = [1.45,1.55]
   i = 0
+  messages.send_sms("Pet in range")
   while not (GPIO.input(channel)):
-      print "Pet in range"
-      change_PWM(pet1,motion[i%2])
-      change_PWM(pet2,motion[i%2])
+      change_PWM(motion1[i%2],pet1)
+      change_PWM(motion2[i%2],pet2)
       i = i + 1
+      time.sleep(0.2)
 
 def main():
 	petCallback(19)
@@ -38,14 +41,12 @@ def main():
 
 	except KeyboardInterrupt:
 	  # Reset GPIO settings
-	  p.stop()
+	  pet1.stop()
+          pet2.stop()
 	  GPIO.cleanup()
 
 GPIO.setup(19,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(19,GPIO.BOTH,callback=petCallback,bouncetime=200)
-
-p.stop()
-GPIO.cleanup()
 
 if __name__=="__main__":
    main()

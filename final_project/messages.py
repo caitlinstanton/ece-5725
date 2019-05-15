@@ -1,14 +1,14 @@
 from twilio.rest import Client
-import socket
 
-account_sid = 'ACca7bb1631080e074755b158782952729'
-auth_token = '7b033d60148eb46db0b0db6a6e3df06e'
+account_sid = 'AC4bda313b35fa302d7ec0e1ae151c8505'
+auth_token = 'aff8936c41459ba1b0f98452ead78c4d'
 client = Client(account_sid,auth_token)
 
 def send_sms(text):
 	message = client.messages.create(
 		body=text,
-		from_='+19179050866',
-		to='+16465521948'
+		from_='+17326482248',
+		to='+17326093709'
 	)
 	print(message.sid)
+send_sms("ahhh")
