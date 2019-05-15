@@ -3,29 +3,39 @@ import datetime
 import RPi.GPIO as GPIO
 import math
 import socket
-
 import messages
-#import servomotion
+
 GPIO.setmode(GPIO.BCM)
 
+# Fetch
 timeVal = [0,0]
 diameter = 15.24 #centimeters
 circumference = math.pi*diameter
 numPasses = 0
 velocity = 0 #cm/s
 
+# Food dispenser
 GPIO_pin = 13
 on_time = 1.2
 freq = 1000.0/(20.0+on_time)
 dc = 100.0*(on_time/(20.0+on_time))
 GPIO.setup(13,GPIO.OUT)
 GPIO.setup(5,GPIO.IN,pull_up_down=GPIO.PUD_UP)
-p = GPIO.PWM(GPIO_pin, freq)
-p.start(dc)
+food = GPIO.PWM(GPIO_pin, freq)
+food.start(dc)
 food_time = (15,55)
 current_time = (datetime.datetime.now().time().hour, datetime.datetime.now().time().minute)
 
-#GPIO.setmode(GPIO.BCM)
+# Petting
+GPIO.setup(20,GPIO.OUT)
+GPIO.setup(21,GPIO.OUT)
+on_time = 1.5
+freq = 1000.0/(20.0+on_time)
+dc = 100.0*(on_time/(20.0+on_time))
+pet1 = GPIO.PWM(20, freq)
+pet2 = GPIO.PWM(21,freq)
+pet1.start(dc)
+pet2.start(dc)
 
 def fetchCallback(channel):
   # Called if sensor output changes
@@ -64,9 +74,15 @@ def change_PWM(on_time, p):
     p.ChangeDutyCycle(dc)
 
 def petCallback(channel):
-  if not (GPIO.input(channel)):
+  motion = [1.3,1.7]
+  i = 0
+  while not (GPIO.input(channel)):
       print "Pet in range"
-      #servomotion.pet()
+      change_PWM(pet1,motion[i%2])
+      change_PWM(pet2,motion[i%2])
+      i = i + 1
+
+
 
 def main():
   # Wrap main content in a try block so we can
@@ -84,11 +100,11 @@ def main():
       current_time = (datetime.datetime.now().time().hour, datetime.datetime.now().time().minute)
   print("Time for food!")
 
-  change_PWM(2.5, p)
+  change_PWM(2.5, food)
   time.sleep(1)
   while GPIO.input(5):
       pass
-  change_PWM(1.2, p)
+  change_PWM(1.2, food)
 
   try:
     # Loop until users quits with CTRL-C
