@@ -2,8 +2,10 @@ import time
 import datetime
 import RPi.GPIO as GPIO
 import math
-import messages
 import socket
+
+import messages
+import servomotion
 
 timeVal = [0,0]
 diameter = 15.24 #centimeters
@@ -24,19 +26,19 @@ def fetchCallback(channel):
     print("Sensor LOW ")
     calculate(stamp)
     if velocity > 50 or numPasses > 10:
+        print "hall"
         #messages.send_sms("Playing fetch!")
-        s = socket.socket()
+        '''s = socket.socket()
         s.connect(('10.148.12.144',5725))
         print "connected"
         server = s.recv(1024)
         s.close()
-        numPasses = 0
+        numPasses = 0'''
 
 def petCallback(channel):
-  if GPIO.input(channel):
-      print "not close"
-  else:
-      print "wow omg"
+  if !(GPIO.input(channel)):
+      print "Pet in range"
+      servomotion.pet()
 
 def calculate(magnetPass):
   global numPasses
