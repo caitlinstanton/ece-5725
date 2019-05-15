@@ -27,7 +27,7 @@ account_sid = 'AC04b78b8dc7118d877990cb3513cfb406'
 auth_token = 'bca894f066779ee1b55a0b52231993ca'
 client = Client(account_sid,auth_token)
 
-food_time = (19,23)
+food_time = (15,07)
 current_time = (datetime.datetime.now().time().hour, datetime.datetime.now().time().minute)
 while (food_time != current_time):
     current_time = (datetime.datetime.now().time().hour, datetime.datetime.now().time().minute)

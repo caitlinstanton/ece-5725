@@ -27,13 +27,14 @@ def fetchCallback(channel):
     calculate(stamp)
     if velocity > 50 or numPasses > 10:
         print "hall"
+        global numPasses
         #messages.send_sms("Playing fetch!")
-        '''s = socket.socket()
+        s = socket.socket()
         s.connect(('10.148.12.144',5725))
         print "connected"
         server = s.recv(1024)
         s.close()
-        numPasses = 0'''
+        numPasses = 0
 
 def petCallback(channel):
   if not (GPIO.input(channel)):
