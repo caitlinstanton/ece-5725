@@ -13,7 +13,7 @@ velocity = 0 #cm/s
 
 GPIO.setmode(GPIO.BCM)
 
-def sensorCallback(channel):
+def fetchCallback(channel):
   # Called if sensor output changes
   stamp = time.time()
   if GPIO.input(channel):
@@ -31,6 +31,12 @@ def sensorCallback(channel):
         server = s.recv(1024)
         s.close()
         numPasses = 0
+
+def petCallback(channel):
+  if GPIO.input(channel):
+      print "not close"
+  else:
+      print "wow omg"
 
 def calculate(magnetPass):
   global numPasses
@@ -51,7 +57,8 @@ def main():
   # messages.
 
   # Get initial reading
-  sensorCallback(12)
+  fetchCallback(12)
+  petCallback(13)
   try:
     # Loop until users quits with CTRL-C
     while True :
@@ -64,7 +71,9 @@ def main():
 # Set Switch GPIO as input
 # Pull high by default
 GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(12, GPIO.BOTH, callback=sensorCallback, bouncetime=200)
+GPIO.add_event_detect(12, GPIO.BOTH, callback=fetchCallback, bouncetime=200)
+GPIO.setup(13,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+GPIO.add_event_detect(13,GPIO.BOTH,callback=petCallback,bouncetime=200)
 
 if __name__=="__main__":
    main()
