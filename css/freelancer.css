@@ -6,7 +6,7 @@
 
 .snippet {
   font-family: 'Courier'
-} 
+}
 
 body {
   font-family: 'Lato';
@@ -180,6 +180,10 @@ section h2 {
 header.masthead {
   padding-top: calc(6rem + 72px);
   padding-bottom: 6rem;
+  background-image:url('../img/header2.jpg');
+  max-width: 100%;
+  height: auto;
+  width: auto
 }
 
 header.masthead h1 {
