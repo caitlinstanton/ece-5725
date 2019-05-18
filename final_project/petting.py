@@ -1,3 +1,6 @@
+# Brandon Quinlan (bmq4) and Caitlin Stanton (cs968)
+# ECE5725, Final Project
+
 import RPi.GPIO as GPIO
 import time
 import messages
@@ -6,6 +9,8 @@ import messages
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(20,GPIO.OUT)
 GPIO.setup(21,GPIO.OUT)
+
+# Set initial PWM
 on_time = 1.5
 freq = 1000.0/(20.0+on_time)
 dc = 100.0*(on_time/(20.0+on_time))
@@ -14,12 +19,14 @@ pet2 = GPIO.PWM(21,freq)
 pet1.start(dc)
 pet2.start(dc)
 
+# Changes PWN signal of p to be high for "on_time" microseconds
 def change_PWM(on_time, p):
     freq = 1000.0/(20.0+on_time)
     dc = 100.0*(on_time/(20.0+on_time))
     p.ChangeFrequency(freq)
     p.ChangeDutyCycle(dc)
 
+# ISR for petting arm
 def petCallback(channel):
   motion2 = [1.3,1.7]
   motion1 = [1.45,1.55]
@@ -45,6 +52,7 @@ def main():
           pet2.stop()
 	  GPIO.cleanup()
 
+# Set up ISR
 GPIO.setup(19,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 GPIO.add_event_detect(19,GPIO.BOTH,callback=petCallback,bouncetime=200)
 
