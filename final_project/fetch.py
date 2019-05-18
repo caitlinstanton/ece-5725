@@ -1,3 +1,6 @@
+# Brandon Quinlan (bmq4) and Caitlin Stanton (cs968)
+# ECE5725, Final Project
+
 import time
 import datetime
 import RPi.GPIO as GPIO
@@ -7,13 +10,14 @@ import messages
 
 GPIO.setmode(GPIO.BCM)
 
-# Fetch
+# Variables for fetch
 timeVal = [0,0]
 diameter = 15.24 #centimeters
 circumference = math.pi*diameter
 numPasses = 0
 velocity = 0 #cm/s
 
+# ISR to be called
 def fetchCallback(channel):
   # Called if sensor output changes
   stamp = time.time()
@@ -27,6 +31,7 @@ def fetchCallback(channel):
     global velocity
     if velocity > 200:
         print "hall"
+        # Connect to Pi zero
         messages.send_sms("Playing fetch!")
         s = socket.socket()
         s.connect(('10.148.12.144',5725))
@@ -35,6 +40,7 @@ def fetchCallback(channel):
         s.close()
         velocity = 0
 
+# Update velocity
 def calculate(magnetPass):
   global numPasses
   numPasses = numPasses + 1

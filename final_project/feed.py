@@ -1,9 +1,13 @@
+# Brandon Quinlan (bmq4) and Caitlin Stanton (cs968)
+# ECE5725, Final Project
+
 import datetime
 import time
 from twilio.rest import Client
 import RPi.GPIO as GPIO
 import messages
 
+# Update PWM signal of p
 def change_PWM(on_time, p):
     freq = 1000.0/(20.0+on_time)
     dc = 100.0*(on_time/(20.0+on_time))
@@ -24,15 +28,20 @@ dc = 100.0*(on_time/(20.0+on_time))
 p = GPIO.PWM(GPIO_pin, freq)
 p.start(dc)
 
+# Initialize desired food time
 food_time = (18,24)
 current_time = (datetime.datetime.now().time().hour, datetime.datetime.now().time().minute)
 while (food_time != current_time):
+    # wait for feeding time
     current_time = (datetime.datetime.now().time().hour, datetime.datetime.now().time().minute)
 messages.send_sms("Time for food!")
 
+# open tank
 change_PWM(2, p)
 while GPIO.input(5):
+    # wait for line break
     pass
+# Close tank
 change_PWM(1.2, p)
 time.sleep(3)
 

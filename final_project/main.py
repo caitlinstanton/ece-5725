@@ -1,3 +1,6 @@
+# Brandon Quinlan (bmq4) and Caitlin Stanton (cs968)
+# ECE5725, Final Project
+
 import time
 import datetime
 import RPi.GPIO as GPIO
