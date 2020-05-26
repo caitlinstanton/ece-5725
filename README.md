@@ -1,4 +1,4 @@
-<h1>ece-5725</h1>
+<h1>ECE 5725 Labs</h1>
 <h2>Raspberry Pi Addresses</h2>
 <ul>
   <li>ETHERNET - B8:27:EB:74:56:D7</li>
